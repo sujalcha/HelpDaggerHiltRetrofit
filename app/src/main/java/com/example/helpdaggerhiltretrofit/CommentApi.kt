@@ -6,5 +6,5 @@ import retrofit2.http.GET
 interface CommentApi {
 
     @GET("/comments")
-    suspend fun getComment() : Response<List<Comment>>
+    suspend fun getComment() : List<Comment>
 }

@@ -32,11 +32,11 @@ fun CommentScreen(
         .background(color = Color.LightGray)) {
         LazyColumn()
         {
-            Log.d("comment","${commentslist.size}")
+          //  Log.d("comment","${commentslist.size}")
 
             item(commentslist.size) {
                 for(comment in commentslist){
-                    Log.d("comment","${comment.toString()}")
+             //       Log.d("comment","${comment.toString()}")
                     Card(modifier = Modifier.padding(20.dp)) {
                         CommentDecor(comment)
                     }

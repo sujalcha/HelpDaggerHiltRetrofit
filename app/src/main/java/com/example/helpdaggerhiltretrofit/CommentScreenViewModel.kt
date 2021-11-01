@@ -6,11 +6,13 @@ import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CommentScreenViewModel @Inject constructor(private val commentRepository: CommentRepository) :ViewModel(){
+class CommentScreenViewModel @Inject constructor(private val commentRepository: CommentRepository) :
+    ViewModel() {
 
     init {
         getcomments()
@@ -18,26 +20,27 @@ class CommentScreenViewModel @Inject constructor(private val commentRepository: 
 
     var commentList = mutableStateOf<List<Comment>>(listOf())
 
-    fun getcomments(){
+    fun getcomments() {
         viewModelScope.launch {
-            var response = commentRepository.getcommentss()
+            var result = commentRepository.getcommentss()
 
-            if(response.isSuccessful){
-                for((i,comment) in response.body()!!.withIndex())
-                {
-//                    Log.d("comment $i","${comment.id}")
-//                    Log.d("comment $i","${comment.body}")
-//                    Log.d("comment $i","${comment.email}")
-//                    Log.d("comment $i","${comment.postId}")
-
-                    val comment = Comment(comment.body,comment.email,comment.id,comment.name,comment.postId)
-
-                    commentList.value += comment
+            when (result) {
+                is Resource.Success -> {
+                    result.data!!.mapIndexed { index, comment ->
+                        val comment = Comment(
+                            comment.body,
+                            comment.email,
+                            comment.id,
+                            comment.name,
+                            comment.postId
+                        )
+                        commentList.value += comment
+                    }
+                }
+                is Resource.Error -> {
+                     Log.d("Error",result.message!!)
                 }
             }
-
-
-
         }
     }
 }
