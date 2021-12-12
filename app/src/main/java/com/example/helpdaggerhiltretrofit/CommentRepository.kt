@@ -7,6 +7,7 @@ import javax.inject.Inject
 @ActivityScoped
 class CommentRepository @Inject constructor(private val commentApi: CommentApi) {
 
+    //trying try catch
     suspend fun getcommentss(): Resource<List<Comment>> {
         val response =
             try {
